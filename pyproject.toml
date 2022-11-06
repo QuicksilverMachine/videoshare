@@ -20,7 +20,7 @@ omit = []
 
 [tool.mypy]
 files = "."
-exclude = ["tests", "migrations", "venv"]
+exclude = ["frontend", "migrations", "tests", "venv"]
 warn_return_any = true
 check_untyped_defs = true
 warn_unused_ignores = true
