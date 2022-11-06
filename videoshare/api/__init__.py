@@ -1,7 +1,11 @@
-from videoshare.api.explorer import explorer_blueprint
+from videoshare.api.explore import explore_blueprint
+from videoshare.api.folder import folder_blueprint
 from videoshare.api.status import status_blueprint
+from videoshare.api.video import video_blueprint
 
 routes = [
-    explorer_blueprint,
+    explore_blueprint,
     status_blueprint,
+    folder_blueprint,
+    video_blueprint,
 ]

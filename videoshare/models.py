@@ -18,28 +18,26 @@ class NodeType:
 
 class Node(db.Model):  # type: ignore
     __tablename__ = "nodes"
+    NODE_TYPE: str | None = None
 
-    id = db.Column(UUID, primary_key=True, default=uuid.uuid4)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String, nullable=False)
-    type = db.Column(db.String, nullable=False)
-    parent_id = db.Column(UUID, db.ForeignKey("nodes.id"))
+    type = db.Column(db.String, nullable=False, default=NODE_TYPE)
+    parent_id = db.Column(UUID(as_uuid=True), db.ForeignKey("nodes.id"), nullable=True)
 
     # Index both nullable and non-nullable parent id to cover the case
     # of root folder being NULL, since NULL is not comparable in SQL by design
     __table_args__ = (
         Index(
             "uix_unique_name_type_parent_id",
-            "name",
-            "type",
-            "parent_id",
+            name,
+            parent_id,
             unique=True,
             postgresql_where=parent_id.isnot(None),
         ),
         Index(
             "uix_unique_name_type_parent_id_null",
-            "name",
-            "type",
-            "parent_id",
+            name,
             unique=True,
             postgresql_where=parent_id.is_(None),
         ),
@@ -60,6 +58,8 @@ class Node(db.Model):  # type: ignore
 
 
 class Folder(Node):
+    NODE_TYPE = NodeType.FOLDER
+
     children = db.relationship(
         "Node", backref=db.backref("parent", remote_side=[Node.id])
     )
@@ -69,10 +69,14 @@ class Folder(Node):
 
 
 class File(Node):
+    NODE_TYPE = NodeType.FILE
+
     def __repr__(self) -> str:
         return f"<File {self.name}>"
 
 
 class Video(File):
+    NODE_TYPE = NodeType.VIDEO
+
     def __repr__(self) -> str:
         return f"<Video {self.name}>"

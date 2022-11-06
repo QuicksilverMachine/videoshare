@@ -22,7 +22,7 @@ RUN echo ${APP_VERSION} > VERSION
 
 # Install system and app requirements and remove build requirements
 RUN apt-get update && \
-    apt-get install -y ${BUILD_REQUIREMENTS} ${SYS_REQUIREMENTS} && \
+    apt-get install -y ${BUILD_REQUIREMENTS} && \
     pip install --no-cache-dir -r ${APP_REQUIREMENTS} && \
     apt-get remove -y ${BUILD_REQUIREMENTS} && apt-get autoremove -y && apt-get clean -y
 
