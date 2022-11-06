@@ -32,12 +32,20 @@ def get(folder_id: str) -> dict[str, Any]:
 def create() -> dict[str, Any]:
     data = get_request_json()
     name = data.get("name")
+    parent_id = data.get("parent_id")
+
+    # TODO: Full name validation (exclude url-unfriendly characters)
     if not name:
         raise BadRequest("Node name is not valid")
 
-    existing = Folder.query.filter_by(name=name).first()
+    existing = Folder.query.filter_by(name=name, parent_id=parent_id).first()
     if existing:
         raise BadRequest("Node with that name already exists in folder")
+
+    if parent_id:
+        parent = Folder.query.filter_by(id=parent_id).first()
+        if not parent:
+            raise BadRequest("Parent does not exist or is not a folder")
 
     new_folder = Folder(name=name)
     db.session.add(new_folder)

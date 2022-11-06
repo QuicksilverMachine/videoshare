@@ -13,12 +13,20 @@ video_blueprint = Blueprint("video", __name__, url_prefix="/video")
 def create() -> dict[str, Any]:
     data = get_request_json()
     name = data.get("name")
+    parent_id = data.get("parent_id")
+
+    # TODO: Full name validation (exclude url-unfriendly characters)
     if not name:
         raise BadRequest("Node name is not valid")
 
     existing = Video.query.filter_by(name=name).first()
     if existing:
         raise BadRequest("Node with that name already exists in folder")
+
+    if parent_id:
+        parent = Folder.query.filter_by(id=parent_id).first()
+        if not parent:
+            raise BadRequest("Parent does not exist or is not a folder")
 
     new_video = Video(name=name)
     db.session.add(new_video)
