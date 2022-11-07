@@ -1,23 +1,19 @@
 import './Path.css';
 import React from "react";
-
+import {faCopy} from "@fortawesome/free-regular-svg-icons";
+import {Button} from '../button/Button'
 
 export class Path extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(e) {
-        this.props.onCurrentFolderChange(e.target.value);
-    }
-
     render () {
         const currentFolder = this.props.currentFolder;
 
         return (
             <div className="Path">
-                <h1>{currentFolder ? currentFolder: "Root"}</h1>
+                <h1>
+                    {currentFolder ? currentFolder: "Root"}
+                    &nbsp;
+                    <Button icon={faCopy} help={'Copy path'}/>
+                </h1>
             </div>
         )
     }

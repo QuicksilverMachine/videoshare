@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './App.css';
-import {ResolvePath} from './client';
+import {GetFolder, ResolvePath} from './client';
 
 import {Path} from './components/path/Path.js'
 import {Controls} from './components/controls/Controls.js'
@@ -12,29 +12,53 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.handleSelectedNodeChange = this.handleSelectedNodeChange.bind(this);
-        this.state = {selectedNode: null, currentFolder: null, contents: []}
+        this.handleContentsChange = this.handleContentsChange.bind(this);
+        this.state = {
+            path: window.location.pathname,
+            selectedNode: null,
+            currentFolder: null,
+            parentFolder: null,
+            contents: [],
+        }
     }
 
     componentDidMount() {
         const result = ResolvePath();
         result.then(value => {
             this.setState({
-                "currentFolder": value['name'],
-                "contents": value["contents"],
+                currentFolder: value["name"],
+                parentFolder: value["parent_id"],
+                contents: value["contents"],
             })
         });
-    }
-
-    handleCurrentFolderChange(currentFolder) {
-        this.setState({currentFolder: currentFolder});
     }
 
     handleSelectedNodeChange(selectedNode) {
         this.setState({selectedNode: selectedNode});
     }
 
-    handleContentsChange(contents) {
-        this.setState({contents: contents});
+    handleContentsChange(folder_id) {
+        const new_folder = folder_id ? folder_id : this.state.parentFolder
+
+        if (new_folder != null) {
+            const response = GetFolder(new_folder)
+            response.then(value => {
+                this.setState({
+                    currentFolder: value['name'],
+                    parentFolder: value["parent_id"],
+                    contents: value["contents"],
+                })
+            });
+        } else {
+            const result = ResolvePath();
+            result.then(value => {
+                this.setState({
+                    currentFolder: value["name"],
+                    parentFolder: value["parent_id"],
+                    contents: value["contents"],
+                })
+            });
+        }
     }
 
     render() {
@@ -45,10 +69,11 @@ class App extends React.Component {
         return (
             <div className="App">
                 <Path
-                    currentFolder={currentFolder}
-                    onCurrentFolderChange={this.handleCurrentFolderChange} />
+                    currentFolder={currentFolder} />
                 <Controls
+                    currentFolder={currentFolder}
                     selectedNode={selectedNode}
+                    onContentsChange={this.handleContentsChange}
                     onSelectedNodeChange={this.handleSelectedNodeChange} />
                 <Contents
                     contents={contents}

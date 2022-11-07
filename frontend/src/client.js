@@ -32,8 +32,8 @@ function patch(url, body) {
     return fetch(url, requestMetadata).then( (response) => response.json() );
 }
 
-export function ResolvePath() {
-    return get(`${ExplorePath}${window.location.pathname}`);
+export function ResolvePath(path) {
+    return get(`${ExplorePath}${path ? path: ""}`);
 }
 
 export function GetFolder(folder_id) {

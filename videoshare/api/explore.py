@@ -16,8 +16,7 @@ def resolve_path(path: str | None = None) -> dict[str, Any]:
     """Resolve path and return list of folders from root to parent"""
     if not path:
         # As path is not specified, using root
-        folder_id = None
-        folder_name = None
+        folder = Folder(id=None, name=None, parent_id=None)
         contents = Node.query.filter(Node.parent_id.is_(None)).all()
     else:
         path_names = path.rstrip("/").split("/")
@@ -45,13 +44,14 @@ def resolve_path(path: str | None = None) -> dict[str, Any]:
 
         # For now, we only take the last folder, previous ones could be
         # used later to display entire path as breadcrumbs
-        folder_id = folders[-1].id
-        folder_name = folders[-1].name
-        contents = Node.query.filter(Node.parent_id == folder_id).all()
+        folder = folders[-1]
+        contents = Node.query.filter(Node.parent_id == folder.id).all()
 
     return {
-        "id": folder_id,
-        "name": folder_name,
+        "path": path,
+        "id": folder.id,
+        "name": folder.name,
+        "parent_id": folder.parent_id,
         "contents": [
             {
                 "id": node.id,

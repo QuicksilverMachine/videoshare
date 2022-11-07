@@ -18,6 +18,7 @@ def get(folder_id: str) -> dict[str, Any]:
     return {
         "id": folder.id,
         "name": folder.name,
+        "parent_id": folder.parent_id,
         "contents": [
             {
                 "id": child.id,

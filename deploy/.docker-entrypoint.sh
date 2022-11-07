@@ -3,8 +3,8 @@
 set -e
 echo "Starting Videoshare"
 
-# TODO: Migrate database
 echo "Running database migrations"
+flask db upgrade
 
 # Run application
 # exec is used here so the script will transfer the PID 1 to the app server when used in a docker container
