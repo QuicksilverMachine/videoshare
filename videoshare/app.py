@@ -1,6 +1,7 @@
 from typing import Type
 
 from flask import Flask
+from flask_cors import CORS
 
 from videoshare.cli import dev_cli
 from videoshare.config import Config
@@ -11,6 +12,9 @@ def create_app(configuration: Type[Config] = Config) -> Flask:
     """Initialize the core application."""
     app = Flask(__name__)
     app.config.from_object(configuration)
+
+    # Set CORS headers
+    CORS(app=app)
 
     # Prepare database
     from videoshare.models import db, migrate

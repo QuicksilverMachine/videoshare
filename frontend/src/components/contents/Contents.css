@@ -1,0 +1,6 @@
+.Contents {
+    flex-grow: 1;
+    border: 1px solid gray;
+    overflow: scroll;
+    padding: 1em;
+}

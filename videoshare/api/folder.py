@@ -16,12 +16,14 @@ def get(folder_id: str) -> dict[str, Any]:
         raise NotFound()
 
     return {
+        "id": folder.id,
         "name": folder.name,
-        "children": [
+        "contents": [
             {
                 "id": child.id,
                 "name": child.name,
                 "type": child.type,
+                "parent_id": child.parent_id,
             }
             for child in folder.children
         ],
