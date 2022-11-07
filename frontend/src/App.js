@@ -109,7 +109,8 @@ class App extends React.Component {
     }
 
     handleCopyURLToClipboard() {
-        const url = `${window.location.origin}/${this.state.path}`
+        const path = this.state.path ? this.state.path : ""
+        const url = `${window.location.origin}/${path}`
         navigator.clipboard.writeText(url).then();
     }
 
