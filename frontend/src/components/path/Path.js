@@ -12,7 +12,7 @@ export class Path extends React.Component {
                 <h1>
                     {currentFolder ? currentFolder: "Root"}
                     &nbsp;
-                    <Button icon={faCopy} help={'Copy path'}/>
+                    <Button icon={faCopy} help={'Copy current path'}/>
                 </h1>
             </div>
         )

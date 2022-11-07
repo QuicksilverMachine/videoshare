@@ -9,6 +9,9 @@ export class Controls extends React.Component {
         super(props);
         this.onSelectedNodeChange = this.onSelectedNodeChange.bind(this);
         this.handleClickNavigateBack = this.handleClickNavigateBack.bind(this);
+        this.handleClickCreateFolder = this.handleClickCreateFolder.bind(this);
+        this.handleClickCreateVideo = this.handleClickCreateVideo.bind(this);
+        this.handleClickMoveNodeUp = this.handleClickMoveNodeUp.bind(this);
     }
 
     onSelectedNodeChange(e) {
@@ -19,6 +22,20 @@ export class Controls extends React.Component {
         this.props.onContentsChange(null)
     }
 
+    handleClickCreateFolder() {
+        const name = "My Name"
+        this.props.onCreateFolder(name);
+    }
+
+    handleClickCreateVideo() {
+        const name = "My Name"
+        this.props.onCreateVideo(name);
+    }
+
+    handleClickMoveNodeUp() {
+        this.props.onMoveNodeUp();
+    }
+
     render() {
         const selectedNode = this.props.selectedNode;
         const currentFolder = this.props.currentFolder;
@@ -26,9 +43,9 @@ export class Controls extends React.Component {
         return (
             <div className="Controls">
                 <Button onClick={this.handleClickNavigateBack} icon={faCircleLeft} help={'Back one level'} disabled={currentFolder === null}/>
-                <Button icon={faFileCirclePlus} help={'Create new video'} />
-                <Button icon={faFolderPlus} help={'Create new folder'} />
-                <Button icon={faCircleUp} help={'Move selected node one level up'} disabled={selectedNode === null || currentFolder === null}/>
+                <Button onClick={this.handleClickCreateVideo} icon={faFileCirclePlus} help={'Create new video'} />
+                <Button onClick={this.handleClickCreateFolder} icon={faFolderPlus} help={'Create new folder'} />
+                <Button onClick={this.handleClickMoveNodeUp} icon={faCircleUp} help={'Move selected node one level up'} disabled={selectedNode === null || currentFolder === null}/>
             </div>
         )
     }

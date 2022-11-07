@@ -11,7 +11,9 @@ export class Button extends React.Component {
     }
 
     handleClick(e) {
-        this.props.onClick(e.target.value)
+        if (this.props.onClick) {
+            this.props.onClick(e.target.value);
+        }
     }
 
     render() {

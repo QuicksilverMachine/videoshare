@@ -3,7 +3,7 @@ from typing import Any
 from flask import Blueprint
 
 from videoshare.errors import BadRequest, NotFound
-from videoshare.models import Folder, Video, db
+from videoshare.models import Folder, Node, Video, db
 from videoshare.utils import get_request_json
 
 video_blueprint = Blueprint("video", __name__, url_prefix="/video")
@@ -19,7 +19,7 @@ def create() -> dict[str, Any]:
     if not name:
         raise BadRequest("Node name is not valid")
 
-    existing = Video.query.filter_by(name=name).first()
+    existing = Video.query.filter_by(name=name, parent_id=parent_id).first()
     if existing:
         raise BadRequest("Node with that name already exists in folder")
 
@@ -28,7 +28,7 @@ def create() -> dict[str, Any]:
         if not parent:
             raise BadRequest("Parent does not exist or is not a folder")
 
-    new_video = Video(name=name)
+    new_video = Video(name=name, parent_id=parent_id)
     db.session.add(new_video)
     db.session.commit()
 
@@ -53,6 +53,18 @@ def move(video_id: str) -> dict[str, Any]:
         new_parent = Folder.query.filter_by(id=new_parent_id).first()
         if not new_parent:
             raise BadRequest("New parent does not exist or is not a folder")
+        if any([existing.name in [child.name for child in new_parent.children]]):
+            raise BadRequest("New parent already contains a node with the same name")
+    else:
+        if any(
+            [
+                existing.name == child.name
+                for child in Node.query.filter(
+                    Node.name == existing.name, Node.parent_id.is_(None)
+                )
+            ]
+        ):
+            raise BadRequest("Root already contains a node with the same name")
 
     existing.parent_id = new_parent_id
     db.session.add(existing)

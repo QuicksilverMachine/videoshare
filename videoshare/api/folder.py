@@ -3,7 +3,7 @@ from typing import Any
 from flask import Blueprint
 
 from videoshare.errors import BadRequest, NotFound
-from videoshare.models import Folder, db
+from videoshare.models import Folder, Node, db
 from videoshare.utils import get_request_json
 
 folder_blueprint = Blueprint("folder", __name__, url_prefix="/folder")
@@ -50,7 +50,7 @@ def create() -> dict[str, Any]:
         if not parent:
             raise BadRequest("Parent does not exist or is not a folder")
 
-    new_folder = Folder(name=name)
+    new_folder = Folder(name=name, parent_id=parent_id)
     db.session.add(new_folder)
     db.session.commit()
 
@@ -75,6 +75,18 @@ def move(folder_id: str) -> dict[str, Any]:
         new_parent = Folder.query.filter_by(id=new_parent_id).first()
         if not new_parent:
             raise BadRequest("New parent does not exist or is not a folder")
+        if any([child.name == existing.name for child in new_parent.children]):
+            raise BadRequest("New parent already contains a node with the same name")
+    else:
+        if any(
+            [
+                existing.name == child.name
+                for child in Node.query.filter(
+                    Node.name == existing.name, Node.parent_id.is_(None)
+                )
+            ]
+        ):
+            raise BadRequest("Root already contains a node with the same name")
 
     existing.parent_id = new_parent_id
     db.session.add(existing)

@@ -12,7 +12,7 @@ export class Node extends React.Component {
     }
 
     handleClick() {
-        this.props.onSelectedNodeChange(this.props.node.id);
+        this.props.onSelectedNodeChange(this.props.node);
     }
 
     handleDoubleClick() {
@@ -66,19 +66,21 @@ export class Contents extends React.Component {
         const selectedNode = this.props.selectedNode;
         const contents = this.props.contents;
 
-        const listItems = contents.map((node) =>
-            <Node
-                key={node.id}
-                node={node}
-                selected={selectedNode === node.id}
-                onSelectedNodeChange={this.props.onSelectedNodeChange}
-                onContentsChange={this.props.onContentsChange}
-            />
-        );
-
-        // Make component for each
-        return (
-            <div className="Contents" onClick={this.handleClick}>{listItems}</div>
-        )
+        const selectedNodeId = selectedNode ? selectedNode.id : null;
+        if (contents){
+            const listItems = contents.map((node) =>
+                <Node
+                    key={node.id}
+                    node={node}
+                    selected={selectedNodeId === node.id}
+                    onSelectedNodeChange={this.props.onSelectedNodeChange}
+                    onContentsChange={this.props.onContentsChange}
+                />
+            );
+            return (
+                <div className="Contents" onClick={this.handleClick}>{listItems}</div>
+            )
+        }
+        return <div className="Contents" onClick={this.handleClick}></div>
     }
 }

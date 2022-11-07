@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './App.css';
-import {GetFolder, ResolvePath} from './client';
+import {CreateFolder, CreateVideo, GetFolder, MoveFolder, MoveVideo, ResolvePath} from './client';
 
 import {Path} from './components/path/Path.js'
 import {Controls} from './components/controls/Controls.js'
@@ -13,9 +13,13 @@ class App extends React.Component {
         super(props);
         this.handleSelectedNodeChange = this.handleSelectedNodeChange.bind(this);
         this.handleContentsChange = this.handleContentsChange.bind(this);
+        this.handleCreateFolder = this.handleCreateFolder.bind(this);
+        this.handleCreateVideo = this.handleCreateVideo.bind(this);
+        this.handleMoveNodeUp = this.handleMoveNodeUp.bind(this);
         this.state = {
             path: window.location.pathname,
             selectedNode: null,
+            currentFolderId: null,
             currentFolder: null,
             parentFolder: null,
             contents: [],
@@ -23,9 +27,10 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const result = ResolvePath();
+        const result = ResolvePath(window.location.pathname);
         result.then(value => {
             this.setState({
+                currentFolderId: value["id"],
                 currentFolder: value["name"],
                 parentFolder: value["parent_id"],
                 contents: value["contents"],
@@ -44,6 +49,7 @@ class App extends React.Component {
             const response = GetFolder(new_folder)
             response.then(value => {
                 this.setState({
+                    currentFolderId: value["id"],
                     currentFolder: value['name'],
                     parentFolder: value["parent_id"],
                     contents: value["contents"],
@@ -53,12 +59,49 @@ class App extends React.Component {
             const result = ResolvePath();
             result.then(value => {
                 this.setState({
+                    currentFolderId: value["id"],
                     currentFolder: value["name"],
                     parentFolder: value["parent_id"],
                     contents: value["contents"],
                 })
             });
         }
+    }
+
+    handleCreateFolder(name) {
+        const parentId = this.state.currentFolderId;
+        const result = CreateFolder(name, parentId);
+        result.then(_ => {
+            this.handleContentsChange(parentId)
+        });
+    }
+
+    handleCreateVideo(name) {
+        const parentId = this.state.currentFolderId;
+        const result = CreateVideo(name, parentId);
+        result.then(_ => {
+            this.handleContentsChange(parentId)
+        });
+    }
+
+    handleMoveNodeUp() {
+        const parentFolder = this.state.parentFolder;
+        const selectedNode = this.state.selectedNode;
+
+        let moveFunction;
+        if (selectedNode.type === "video") {
+            moveFunction = MoveVideo
+        } else if (selectedNode.type === "folder") {
+            moveFunction = MoveFolder
+        } else {
+            return
+        }
+        const result = moveFunction(selectedNode.id, parentFolder);
+        result.then(value => {
+            if (!value.code || value.code < 400) {
+                this.handleContentsChange(parentFolder)
+            }
+        });
     }
 
     render() {
@@ -74,7 +117,11 @@ class App extends React.Component {
                     currentFolder={currentFolder}
                     selectedNode={selectedNode}
                     onContentsChange={this.handleContentsChange}
-                    onSelectedNodeChange={this.handleSelectedNodeChange} />
+                    onSelectedNodeChange={this.handleSelectedNodeChange}
+                    onCreateFolder={this.handleCreateFolder}
+                    onCreateVideo={this.handleCreateVideo}
+                    onMoveNodeUp={this.handleMoveNodeUp}
+                />
                 <Contents
                     contents={contents}
                     selectedNode={selectedNode}
