@@ -58,7 +58,7 @@ def move(video_id: str) -> dict[str, Any]:
     else:
         if any(
             [
-                existing.name == child.name
+                existing.name == child.name and existing.parent_id is not None
                 for child in Node.query.filter(
                     Node.name == existing.name, Node.parent_id.is_(None)
                 )
@@ -68,6 +68,10 @@ def move(video_id: str) -> dict[str, Any]:
 
     existing.parent_id = new_parent_id
     db.session.add(existing)
+    db.session.flush()
+
+    # Update children's paths
+    existing.update_children_paths()
     db.session.commit()
 
     return {

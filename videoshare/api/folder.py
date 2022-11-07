@@ -19,6 +19,7 @@ def get(folder_id: str) -> dict[str, Any]:
         "id": folder.id,
         "name": folder.name,
         "parent_id": folder.parent_id,
+        "path": folder.path,
         "contents": [
             {
                 "id": child.id,
@@ -80,7 +81,7 @@ def move(folder_id: str) -> dict[str, Any]:
     else:
         if any(
             [
-                existing.name == child.name
+                existing.name == child.name and existing.parent_id is not None
                 for child in Node.query.filter(
                     Node.name == existing.name, Node.parent_id.is_(None)
                 )
@@ -90,6 +91,10 @@ def move(folder_id: str) -> dict[str, Any]:
 
     existing.parent_id = new_parent_id
     db.session.add(existing)
+    db.session.flush()
+
+    # Update children's paths
+    existing.update_children_paths()
     db.session.commit()
 
     return {

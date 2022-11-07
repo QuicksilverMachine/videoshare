@@ -1,3 +1,8 @@
 .Path {
     padding: 1em;
 }
+
+.PathFull {
+    color: #999;
+    height: 1em;
+}

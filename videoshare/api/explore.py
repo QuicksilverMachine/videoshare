@@ -1,8 +1,6 @@
-from operator import and_, or_
 from typing import Any
 
 from flask import Blueprint
-from sqlalchemy import select
 
 from videoshare.errors import NotFound
 from videoshare.models import Folder, Node
@@ -19,33 +17,11 @@ def resolve_path(path: str | None = None) -> dict[str, Any]:
         folder = Folder(id=None, name=None, parent_id=None)
         contents = Node.query.filter(Node.parent_id.is_(None)).all()
     else:
-        path_names = path.rstrip("/").split("/")
-        root_folder = path_names[0]
-        subquery = select(Folder.id).filter(Folder.name == root_folder).subquery()
-        for name in path_names[1:]:
-            subquery = (
-                select(Folder.id)
-                .filter(
-                    or_(
-                        # Get next folder
-                        and_(
-                            Folder.parent_id.in_(select(subquery)), Folder.name == name
-                        ),
-                        # And keep current folder
-                        Folder.id.in_(select(subquery)),
-                    ),
-                )
-                .subquery()
-            )
-        folders = Folder.query.filter(Folder.id.in_(select(subquery))).all()
-
-        if not folders or len(folders) != len(path_names):
+        path = path.strip("/")
+        folder = Folder.query.filter_by(path=path).first()
+        if not folder:
             raise NotFound("Path could not be resolved")
-
-        # For now, we only take the last folder, previous ones could be
-        # used later to display entire path as breadcrumbs
-        folder = folders[-1]
-        contents = Node.query.filter(Node.parent_id == folder.id).all()
+        contents = folder.children
 
     return {
         "path": path,

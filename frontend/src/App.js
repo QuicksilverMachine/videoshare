@@ -16,8 +16,9 @@ class App extends React.Component {
         this.handleCreateFolder = this.handleCreateFolder.bind(this);
         this.handleCreateVideo = this.handleCreateVideo.bind(this);
         this.handleMoveNodeUp = this.handleMoveNodeUp.bind(this);
+        this.handleCopyURLToClipboard = this.handleCopyURLToClipboard.bind(this);
         this.state = {
-            path: window.location.pathname,
+            path: "",
             selectedNode: null,
             currentFolderId: null,
             currentFolder: null,
@@ -30,6 +31,7 @@ class App extends React.Component {
         const result = ResolvePath(window.location.pathname);
         result.then(value => {
             this.setState({
+                path: value["path"],
                 currentFolderId: value["id"],
                 currentFolder: value["name"],
                 parentFolder: value["parent_id"],
@@ -49,6 +51,7 @@ class App extends React.Component {
             const response = GetFolder(new_folder)
             response.then(value => {
                 this.setState({
+                    path: value["path"],
                     currentFolderId: value["id"],
                     currentFolder: value['name'],
                     parentFolder: value["parent_id"],
@@ -59,6 +62,7 @@ class App extends React.Component {
             const result = ResolvePath();
             result.then(value => {
                 this.setState({
+                    path: value["path"],
                     currentFolderId: value["id"],
                     currentFolder: value["name"],
                     parentFolder: value["parent_id"],
@@ -104,7 +108,13 @@ class App extends React.Component {
         });
     }
 
+    handleCopyURLToClipboard() {
+        const url = `${window.location.origin}/${this.state.path}`
+        navigator.clipboard.writeText(url).then();
+    }
+
     render() {
+        const path = this.state.path
         const contents = this.state.contents
         const currentFolder = this.state.currentFolder
         const selectedNode = this.state.selectedNode
@@ -112,6 +122,8 @@ class App extends React.Component {
         return (
             <div className="App">
                 <Path
+                    path={path}
+                    onCopyURLToClipboard={this.handleCopyURLToClipboard}
                     currentFolder={currentFolder} />
                 <Controls
                     currentFolder={currentFolder}
