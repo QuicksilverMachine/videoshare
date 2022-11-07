@@ -18,7 +18,6 @@ class App extends React.Component {
     componentDidMount() {
         const result = ResolvePath();
         result.then(value => {
-            console.log(value["contents"])
             this.setState({
                 "currentFolder": value['name'],
                 "contents": value["contents"],
