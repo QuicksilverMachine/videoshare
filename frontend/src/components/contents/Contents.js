@@ -5,7 +5,7 @@ import {
     Droppable,
     DnDContextWithSensors,
 } from "../dnd/DragAndDrop";
-import { Node } from "../node/Node";
+import { Node, NODE_TYPE_FOLDER } from "../node/Node";
 
 export class Contents extends React.Component {
     constructor(props) {
@@ -28,7 +28,7 @@ export class Contents extends React.Component {
         if (e.active.id === e.over.id) {
             return;
         }
-        if (e.over.data.current.type !== "folder") {
+        if (e.over.data.current.type !== NODE_TYPE_FOLDER) {
             return;
         }
         this.props.onMoveNode(e.active.data.current, e.over.data.current);

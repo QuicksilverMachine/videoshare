@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconButton } from "../icon-button/IconButton";
 import { NameDialog } from "../dialog/Dialog";
+import { NODE_TYPE_FOLDER, NODE_TYPE_VIDEO } from "../node/Node";
 
 export class Controls extends React.Component {
     constructor(props) {
@@ -95,13 +96,13 @@ export class Controls extends React.Component {
                     disabled={selectedNode === null || currentFolder === null}
                 />
                 <NameDialog
-                    nodeType="video"
+                    nodeType={NODE_TYPE_VIDEO}
                     showDialog={this.state.showNewVideoDialog}
                     onConfirmClick={this.handleCreateVideo}
                     onCancelClick={this.handleCloseNewVideoDialog}
                 />
                 <NameDialog
-                    nodeType="folder"
+                    nodeType={NODE_TYPE_FOLDER}
                     showDialog={this.state.showNewFolderDialog}
                     onConfirmClick={this.handleCreateFolder}
                     onCancelClick={this.handleCloseNewFolderDialog}

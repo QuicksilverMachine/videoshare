@@ -16,6 +16,7 @@ import {
 import { Path } from "./components/path/Path.js";
 import { Controls } from "./components/controls/Controls.js";
 import { Contents } from "./components/contents/Contents.js";
+import { NODE_TYPE_FOLDER, NODE_TYPE_VIDEO } from "./components/node/Node";
 
 class App extends React.Component {
     constructor(props) {
@@ -147,9 +148,9 @@ class App extends React.Component {
         const selectedNode = this.state.selectedNode;
 
         let moveFunction;
-        if (selectedNode.type === "video") {
+        if (selectedNode.type === NODE_TYPE_VIDEO) {
             moveFunction = MoveVideo;
-        } else if (selectedNode.type === "folder") {
+        } else if (selectedNode.type === NODE_TYPE_FOLDER) {
             moveFunction = MoveFolder;
         } else {
             return;
@@ -170,9 +171,9 @@ class App extends React.Component {
 
     handleMoveNode(node, parent) {
         let moveFunction;
-        if (node.type === "video") {
+        if (node.type === NODE_TYPE_VIDEO) {
             moveFunction = MoveVideo;
-        } else if (node.type === "folder") {
+        } else if (node.type === NODE_TYPE_FOLDER) {
             moveFunction = MoveFolder;
         } else {
             return;

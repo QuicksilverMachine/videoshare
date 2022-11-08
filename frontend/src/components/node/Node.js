@@ -7,6 +7,9 @@ import {
     faFolder,
 } from "@fortawesome/free-regular-svg-icons";
 
+export const NODE_TYPE_FOLDER = "folder";
+export const NODE_TYPE_VIDEO = "video";
+
 export class Node extends React.Component {
     constructor(props) {
         super(props);
@@ -20,7 +23,7 @@ export class Node extends React.Component {
 
     handleDoubleClick() {
         const nodeType = this.props.node.type;
-        if (nodeType === "folder") {
+        if (nodeType === NODE_TYPE_FOLDER) {
             this.props.onContentsChange(this.props.node.id);
         }
     }
@@ -32,9 +35,9 @@ export class Node extends React.Component {
         const selected = this.props.selected;
 
         let icon = faFile;
-        if (nodeType === "video") {
+        if (nodeType === NODE_TYPE_VIDEO) {
             icon = faFileVideo;
-        } else if (nodeType === "folder") {
+        } else if (nodeType === NODE_TYPE_FOLDER) {
             icon = faFolder;
         }
         return (
