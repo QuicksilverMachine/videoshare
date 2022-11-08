@@ -70,6 +70,8 @@ class App extends React.Component {
                 })
             });
         }
+        // Reset selected after traversal
+        this.setState({selectedNode: null})
     }
 
     handleCreateFolder(name) {
