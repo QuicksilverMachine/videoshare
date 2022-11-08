@@ -28,7 +28,6 @@ class GUID(TypeDecorator):
     def load_dialect_impl(
         self, dialect: PGDialect_psycopg2 | SQLiteDialect_pysqlite
     ) -> Any:
-        print("DIALECT", type(dialect))
         if dialect.name == "postgresql":
             return dialect.type_descriptor(UUID(as_uuid=True))  # type: ignore
         else:

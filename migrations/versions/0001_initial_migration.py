@@ -7,7 +7,8 @@ Create Date: 2022-11-06 21:45:56.185476
 """
 import sqlalchemy as sa
 from alembic import op
-from sqlalchemy.dialects import postgresql
+
+from videoshare.utils import GUID
 
 # revision identifiers, used by Alembic.
 revision = "5e1c83b879af"
@@ -19,10 +20,10 @@ depends_on = None
 def upgrade():
     op.create_table(
         "nodes",
-        sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column("id", GUID, nullable=False),
         sa.Column("name", sa.String(), nullable=False),
         sa.Column("type", sa.String(), nullable=False),
-        sa.Column("parent_id", postgresql.UUID(as_uuid=True), nullable=True),
+        sa.Column("parent_id", GUID, nullable=True),
         sa.Column("path", sa.String(), nullable=False),
         sa.ForeignKeyConstraint(
             ("parent_id",),
