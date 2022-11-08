@@ -27,7 +27,7 @@ def create_app(configuration: Type[Config] = Config) -> Flask:
     logger = logging.getLogger(__name__)
     logger.info("Starting application")
 
-    app = APIFlask(__name__, title="Videoshare API", version=__version__)
+    app = APIFlask(__name__, title="Videoshare API", version=__version__, docs_path="/")
     app.config.from_object(configuration)
 
     # Set CORS headers

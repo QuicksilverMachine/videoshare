@@ -86,7 +86,7 @@ Frontend will start the server at http://localhost:3000.
 
 ## OpenAPI Schema
 
-The service's OpenAPI schema can be accessed on the server's `/docs` address. 
+The service's OpenAPI schema can be accessed on the server's root address. 
 This auto-documenting page will allow the user to easily test all endpoints.
 
 ## Development
