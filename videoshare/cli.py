@@ -8,8 +8,8 @@ dev_cli = AppGroup("dev", help="Development commands")
 @dev_cli.command("init-db", help="Initialize development database")  # type: ignore
 def init_db() -> None:
     try:
-        db.session.query(Video).delete()  # type: ignore
-        db.session.query(Folder).delete()  # type: ignore
+        db.session.query(Video).delete()
+        db.session.query(Folder).delete()
 
         folder1 = Folder(name="folder1")
         folder2 = Folder(name="folder2")

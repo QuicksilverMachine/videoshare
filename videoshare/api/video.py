@@ -1,16 +1,17 @@
 from typing import Any
 
-from flask import Blueprint
+from apiflask import APIBlueprint
 
 from videoshare.errors import BadRequest, NotFound
 from videoshare.models import Folder, Node, Video, db
 from videoshare.utils import get_request_json
 
-video_blueprint = Blueprint("video", __name__, url_prefix="/video")
+video_blueprint = APIBlueprint("video", __name__, url_prefix="/video")
 
 
 @video_blueprint.route("/", methods=["POST"])
 def create() -> dict[str, Any]:
+    # noinspection DuplicatedCode
     data = get_request_json()
     name = data.get("name")
     parent_id = data.get("parent_id")

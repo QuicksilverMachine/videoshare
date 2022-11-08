@@ -1,6 +1,6 @@
-from flask import Blueprint
+from apiflask import APIBlueprint
 
-status_blueprint = Blueprint("status", __name__, url_prefix="/status")
+status_blueprint = APIBlueprint("status", __name__, url_prefix="/status")
 
 
 @status_blueprint.route("/")

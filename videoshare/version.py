@@ -6,7 +6,7 @@ def get_version() -> str:
     return (
         Path(version_file).read_text().strip()
         if Path(version_file).exists()
-        else "0.0.1+development.build"
+        else "0.0.1+development"
     )
 
 

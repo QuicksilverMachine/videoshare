@@ -1,12 +1,12 @@
 from typing import Any
 
-from flask import Blueprint
+from apiflask import APIBlueprint
 
 from videoshare.errors import BadRequest, NotFound
 from videoshare.models import Folder, Node, db
 from videoshare.utils import get_request_json
 
-folder_blueprint = Blueprint("folder", __name__, url_prefix="/folder")
+folder_blueprint = APIBlueprint("folder", __name__, url_prefix="/folder")
 
 
 @folder_blueprint.route("/<uuid:folder_id>")
@@ -35,6 +35,7 @@ def get(folder_id: str) -> dict[str, Any]:
 
 @folder_blueprint.route("/", methods=["POST"])
 def create() -> dict[str, Any]:
+    # noinspection DuplicatedCode
     data = get_request_json()
     name = data.get("name")
     parent_id = data.get("parent_id")

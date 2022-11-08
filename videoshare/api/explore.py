@@ -1,11 +1,11 @@
 from typing import Any
 
-from flask import Blueprint
+from apiflask import APIBlueprint
 
 from videoshare.errors import NotFound
 from videoshare.models import Folder, Node
 
-explore_blueprint = Blueprint("explore", __name__, url_prefix="/explore")
+explore_blueprint = APIBlueprint("explore", __name__, url_prefix="/explore")
 
 
 @explore_blueprint.route("/")

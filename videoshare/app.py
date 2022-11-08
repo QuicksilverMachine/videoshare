@@ -1,16 +1,18 @@
 from typing import Type
 
+from apiflask import APIFlask
 from flask import Flask
 from flask_cors import CORS
 
 from videoshare.cli import dev_cli
 from videoshare.config import Config
 from videoshare.errors import register_error_handlers
+from videoshare.version import __version__
 
 
 def create_app(configuration: Type[Config] = Config) -> Flask:
     """Initialize the core application."""
-    app = Flask(__name__)
+    app = APIFlask(__name__, title="Videoshare API", version=__version__)
     app.config.from_object(configuration)
 
     # Set CORS headers

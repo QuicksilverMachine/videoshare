@@ -96,7 +96,7 @@ class Node(db.Model):  # type: ignore
         with_recursive = beginning_getter.union_all(
             Node.query.filter(Node.parent_id == beginning_getter.c.id)
         )
-        result = db.session.query(with_recursive).all()  # type: ignore
+        result = db.session.query(with_recursive).all()
         for row in result:
             node = Node.query.filter_by(id=row[0]).first()
             node.path = get_path(name=row[1], parent_id=row[3])
