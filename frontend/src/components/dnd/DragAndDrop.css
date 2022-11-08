@@ -1,0 +1,13 @@
+.DraggableButton {
+    width: 8rem;
+    height: 10rem;
+    border: none;
+    background-color: transparent;
+}
+
+.DroppableContainer {
+    width: 8rem;
+    height: 10rem;
+    border-radius: 1rem;
+    margin: 1.5rem;
+}

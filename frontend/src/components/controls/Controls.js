@@ -5,7 +5,7 @@ import {
     faFileCirclePlus,
     faFolderPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { IconButton } from "../button/IconButton";
+import { IconButton } from "../icon-button/IconButton";
 import { NameDialog } from "../dialog/Dialog";
 
 export class Controls extends React.Component {

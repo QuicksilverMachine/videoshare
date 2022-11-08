@@ -1,7 +1,7 @@
 import "./Path.css";
 import React from "react";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
-import { IconButton } from "../button/IconButton";
+import { IconButton } from "../icon-button/IconButton";
 
 export class Path extends React.Component {
     constructor(props) {
