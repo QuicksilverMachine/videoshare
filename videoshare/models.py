@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from flask_migrate import Migrate
@@ -9,6 +10,7 @@ from sqlalchemy.util import classproperty
 
 db = SQLAlchemy()
 migrate = Migrate()
+logger = logging.getLogger(__name__)
 
 
 class NodeType:
@@ -28,12 +30,14 @@ def default_node_path(context: PGExecutionContext_psycopg2) -> str:
     current_parameters = context.get_current_parameters()
     name = current_parameters.get("name")
     parent_id = current_parameters.get("parent_id")
+    logger.debug("Updating path for node %s", current_parameters.get("id"))
 
     return get_path(name=name, parent_id=parent_id)
 
 
 def on_update_node_path(context: PGExecutionContext_psycopg2) -> None:
     node_id = str(context.get_current_parameters().get("nodes_id"))
+    logger.debug("Updating path for node %s", node_id)
     node = Node.query.filter_by(id=node_id).first()
     node_path = get_path(name=node.name, parent_id=node.parent_id)
 
@@ -90,6 +94,7 @@ class Node(db.Model):  # type: ignore
 
     def update_children_paths(self) -> None:
         """Recursively discover all children and update their paths"""
+        logger.debug("Updating child node paths for node %s", self.id)
         beginning_getter = Node.query.filter(Node.id == self.id).cte(
             name="children_for", recursive=True
         )

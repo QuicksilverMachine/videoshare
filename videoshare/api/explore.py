@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from apiflask import APIBlueprint
@@ -7,6 +8,7 @@ from videoshare.models import Folder, Node
 from videoshare.schema.response import FolderResponse
 
 explore_blueprint = APIBlueprint("explore", __name__, url_prefix="/explore")
+logger = logging.getLogger(__name__)
 
 
 @explore_blueprint.route("/")
@@ -22,6 +24,7 @@ def resolve_path(path: str | None = None) -> dict[str, Any]:
         path = path.strip("/")
         folder = Folder.query.filter_by(path=path).first()
         if not folder:
+            logger.warning("Path %s not found or is not a folder", path)
             raise NotFound("Path could not be resolved")
         contents = folder.children
 

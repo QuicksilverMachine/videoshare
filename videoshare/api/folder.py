@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from apiflask import APIBlueprint
@@ -8,6 +9,7 @@ from videoshare.schema.response import FolderResponse, NodeResponse
 from videoshare.utils import get_request_json
 
 folder_blueprint = APIBlueprint("folder", __name__, url_prefix="/folder")
+logger = logging.getLogger(__name__)
 
 
 @folder_blueprint.route("/<uuid:folder_id>")
@@ -16,7 +18,8 @@ def get(folder_id: str) -> dict[str, Any]:
     """Retrieve a folder and it's contents"""
     folder = Folder.query.filter_by(id=folder_id).first()
     if folder is None:
-        raise NotFound()
+        logger.warning("Folder %s not found", folder_id)
+        raise NotFound("Folder not found")
 
     return {
         "id": folder.id,
@@ -46,15 +49,20 @@ def create() -> dict[str, Any]:
     parent_id = data.get("parent_id")
 
     if not name:
-        raise BadRequest("Node name is not valid")
+        logger.warning("Failed to create node, no name provided")
+        raise BadRequest("Node name not provided")
 
     existing = Folder.query.filter_by(name=name, parent_id=parent_id).first()
     if existing:
+        logger.warning("Failed to create node, name already exists")
         raise BadRequest("Node with that name already exists in folder")
 
     if parent_id:
         parent = Folder.query.filter_by(id=parent_id).first()
         if not parent:
+            logger.warning(
+                "Failed to create node, parent does not exist or is not a folder"
+            )
             raise BadRequest("Parent does not exist or is not a folder")
 
     new_folder = Folder(name=name, parent_id=parent_id)
@@ -77,6 +85,7 @@ def move(folder_id: str) -> dict[str, Any]:
     """Move a folder to another folder"""
     existing = Folder.query.filter_by(id=folder_id).first()
     if not existing:
+        logger.warning("Failed to move node %s, not found", folder_id)
         raise NotFound("Node with that id does not exist")
 
     data = get_request_json()
@@ -84,8 +93,14 @@ def move(folder_id: str) -> dict[str, Any]:
     if new_parent_id:
         new_parent = Folder.query.filter_by(id=new_parent_id).first()
         if not new_parent:
+            logger.warning(
+                "Failed to move node, parent does not exist or is not a folder"
+            )
             raise BadRequest("New parent does not exist or is not a folder")
         if any([child.name == existing.name for child in new_parent.children]):
+            logger.warning(
+                "Failed to move node, name already exists in %s", new_parent_id
+            )
             raise BadRequest("New parent already contains a node with the same name")
     else:
         if any(
@@ -96,6 +111,7 @@ def move(folder_id: str) -> dict[str, Any]:
                 )
             ]
         ):
+            logger.warning("Failed to move node, name already exists in root")
             raise BadRequest("Root already contains a node with the same name")
 
     existing.parent_id = new_parent_id

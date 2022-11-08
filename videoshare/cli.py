@@ -1,16 +1,21 @@
+import logging
+
 from flask.cli import AppGroup
 
 from videoshare.models import Folder, Video, db
 
 dev_cli = AppGroup("dev", help="Development commands")
+logger = logging.getLogger(__name__)
 
 
 @dev_cli.command("init-db", help="Initialize development database")  # type: ignore
 def init_db() -> None:
     try:
+        logger.info("Truncating existing data")
         db.session.query(Video).delete()
         db.session.query(Folder).delete()
 
+        logger.info("Inserting test data")
         folder1 = Folder(name="folder1")
         folder2 = Folder(name="folder2")
         folder3 = Folder(name="folder3")
@@ -37,6 +42,7 @@ def init_db() -> None:
         db.session.add(video3)
 
         db.session.commit()
+        logger.info("Database initialization successful")
     except Exception as e:
-        print(f"Failed to initialize database: {e}")
+        logger.error("Failed to initialize database: %s", e)
         db.session.rollback()

@@ -1,3 +1,4 @@
+import logging
 from typing import Type
 
 from apiflask import APIFlask
@@ -10,8 +11,22 @@ from videoshare.errors import register_error_handlers
 from videoshare.version import __version__
 
 
+def configure_logging() -> None:
+    logger = logging.getLogger()
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    logger.debug("Logging configured")
+
+
 def create_app(configuration: Type[Config] = Config) -> Flask:
     """Initialize the core application."""
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    logger.info("Starting application")
+
     app = APIFlask(__name__, title="Videoshare API", version=__version__)
     app.config.from_object(configuration)
 

@@ -1,5 +1,5 @@
 from apiflask import Schema
-from apiflask.fields import Integer, List, Nested, String
+from apiflask.fields import List, Nested, String
 
 
 class StatusResponse(Schema):
@@ -7,7 +7,7 @@ class StatusResponse(Schema):
 
 
 class NodeResponse(Schema):
-    id = Integer()
+    id = String()
     name = String()
     type = String()
     parent_id = String()
