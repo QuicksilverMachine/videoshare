@@ -23,7 +23,11 @@ def create() -> dict[str, Any]:
 
     if not name:
         logger.warning("Failed to create node, no name provided")
-        raise BadRequest("Node name is not valid")
+        raise BadRequest("Node name must be provided")
+
+    if not Folder.VALID_NAME.match(name):
+        logger.warning("Failed to create node, name is not valid")
+        raise BadRequest("Node node is not valid")
 
     existing = Video.query.filter_by(name=name, parent_id=parent_id).first()
     if existing:
@@ -69,7 +73,7 @@ def move(video_id: str) -> dict[str, Any]:
                 "Failed to move node, parent does not exist or is not a folder"
             )
             raise BadRequest("New parent does not exist or is not a folder")
-        if any([existing.name in [child.name for child in new_parent.children]]):
+        if any([child.name == existing.name for child in new_parent.children]):
             logger.warning(
                 "Failed to move node, name already exists in %s", new_parent_id
             )

@@ -1,12 +1,14 @@
 import logging
+import re
 import uuid
 
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Index
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.dialects.postgresql.psycopg2 import PGExecutionContext_psycopg2
 from sqlalchemy.util import classproperty
+
+from videoshare.utils import GUID
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -48,11 +50,12 @@ def on_update_node_path(context: PGExecutionContext_psycopg2) -> None:
 class Node(db.Model):  # type: ignore
     __tablename__ = "nodes"
     NODE_TYPE: str | None = None
+    VALID_NAME = re.compile(r"^[\w\-. ]+$")
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = db.Column(GUID, primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False, default=NODE_TYPE)
-    parent_id = db.Column(UUID(as_uuid=True), db.ForeignKey("nodes.id"), nullable=True)
+    parent_id = db.Column(GUID, db.ForeignKey("nodes.id"), nullable=True)
     path = db.Column(
         db.String,
         nullable=False,
