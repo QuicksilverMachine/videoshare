@@ -4,13 +4,16 @@ from apiflask import APIBlueprint
 
 from videoshare.errors import BadRequest, NotFound
 from videoshare.models import Folder, Node, db
+from videoshare.schema.response import FolderResponse, NodeResponse
 from videoshare.utils import get_request_json
 
 folder_blueprint = APIBlueprint("folder", __name__, url_prefix="/folder")
 
 
 @folder_blueprint.route("/<uuid:folder_id>")
+@folder_blueprint.output(FolderResponse)
 def get(folder_id: str) -> dict[str, Any]:
+    """Retrieve a folder and it's contents"""
     folder = Folder.query.filter_by(id=folder_id).first()
     if folder is None:
         raise NotFound()
@@ -34,7 +37,9 @@ def get(folder_id: str) -> dict[str, Any]:
 
 
 @folder_blueprint.route("/", methods=["POST"])
+@folder_blueprint.output(FolderResponse)
 def create() -> dict[str, Any]:
+    """Create a new folder"""
     # noinspection DuplicatedCode
     data = get_request_json()
     name = data.get("name")
@@ -61,12 +66,15 @@ def create() -> dict[str, Any]:
         "name": new_folder.name,
         "type": new_folder.type,
         "parent_id": new_folder.parent_id,
+        "contents": [],
     }
 
 
 # noinspection DuplicatedCode
 @folder_blueprint.route("/<uuid:folder_id>", methods=["PATCH"])
+@folder_blueprint.output(NodeResponse)
 def move(folder_id: str) -> dict[str, Any]:
+    """Move a folder to another folder"""
     existing = Folder.query.filter_by(id=folder_id).first()
     if not existing:
         raise NotFound("Node with that id does not exist")
@@ -103,4 +111,5 @@ def move(folder_id: str) -> dict[str, Any]:
         "name": existing.name,
         "type": existing.type,
         "parent_id": existing.parent_id,
+        "path": existing.path,
     }

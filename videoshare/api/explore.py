@@ -4,12 +4,14 @@ from apiflask import APIBlueprint
 
 from videoshare.errors import NotFound
 from videoshare.models import Folder, Node
+from videoshare.schema.response import FolderResponse
 
 explore_blueprint = APIBlueprint("explore", __name__, url_prefix="/explore")
 
 
 @explore_blueprint.route("/")
 @explore_blueprint.route("/<path:path>")
+@explore_blueprint.output(FolderResponse)
 def resolve_path(path: str | None = None) -> dict[str, Any]:
     """Resolve path and return list of folders from root to parent"""
     if not path:

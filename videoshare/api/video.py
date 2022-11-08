@@ -4,13 +4,16 @@ from apiflask import APIBlueprint
 
 from videoshare.errors import BadRequest, NotFound
 from videoshare.models import Folder, Node, Video, db
+from videoshare.schema.response import NodeResponse, VideoResponse
 from videoshare.utils import get_request_json
 
 video_blueprint = APIBlueprint("video", __name__, url_prefix="/video")
 
 
 @video_blueprint.route("/", methods=["POST"])
+@video_blueprint.output(VideoResponse)
 def create() -> dict[str, Any]:
+    """Create a new video"""
     # noinspection DuplicatedCode
     data = get_request_json()
     name = data.get("name")
@@ -42,7 +45,9 @@ def create() -> dict[str, Any]:
 
 # noinspection DuplicatedCode
 @video_blueprint.route("/<uuid:video_id>", methods=["PATCH"])
+@video_blueprint.output(NodeResponse)
 def move(video_id: str) -> dict[str, Any]:
+    """Move video to another folder"""
     existing = Video.query.filter_by(id=video_id).first()
     if not existing:
         raise NotFound("Node with that id does not exist")
@@ -79,4 +84,5 @@ def move(video_id: str) -> dict[str, Any]:
         "name": existing.name,
         "type": existing.type,
         "parent_id": existing.parent_id,
+        "path": existing.path,
     }
