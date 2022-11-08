@@ -1,6 +1,5 @@
 .Node {
     color: #333;
-    margin: 1.5rem;
     width: 8rem;
     height: 10rem;
     text-align: center;
@@ -37,4 +36,22 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+.Contents button {
+    background-color: transparent;
+    border: none;
+}
+
+.DraggableButton {
+    width: 8rem;
+    height: 10rem;
+    border-radius: 1rem;
+}
+
+.DroppableContainer {
+    width: 8rem;
+    height: 10rem;
+    border-radius: 1rem;
+    margin: 1.5rem;
 }

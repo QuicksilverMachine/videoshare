@@ -16,6 +16,7 @@ class App extends React.Component {
         this.handleCreateFolder = this.handleCreateFolder.bind(this);
         this.handleCreateVideo = this.handleCreateVideo.bind(this);
         this.handleMoveNodeUp = this.handleMoveNodeUp.bind(this);
+        this.handleMoveNode = this.handleMoveNode.bind(this);
         this.handleCopyURLToClipboard = this.handleCopyURLToClipboard.bind(this);
         this.state = {
             path: "",
@@ -110,6 +111,23 @@ class App extends React.Component {
         });
     }
 
+    handleMoveNode(node, parent) {
+        let moveFunction;
+        if (node.type === "video") {
+            moveFunction = MoveVideo
+        } else if (node.type === "folder") {
+            moveFunction = MoveFolder
+        } else {
+            return
+        }
+        const result = moveFunction(node.id, parent.id);
+        result.then(value => {
+            if (!value.code || value.code < 400) {
+                this.handleContentsChange(this.state.currentFolderId)
+            }
+        });
+    }
+
     handleCopyURLToClipboard() {
         const path = this.state.path ? this.state.path : ""
         const url = `${window.location.origin}/${path}`
@@ -141,7 +159,9 @@ class App extends React.Component {
                     contents={contents}
                     selectedNode={selectedNode}
                     onContentsChange={this.handleContentsChange}
-                    onSelectedNodeChange={this.handleSelectedNodeChange} />
+                    onSelectedNodeChange={this.handleSelectedNodeChange}
+                    onMoveNode={this.handleMoveNode}
+                />
             </div>
         );
     }

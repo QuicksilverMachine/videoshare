@@ -2,6 +2,63 @@ import './Contents.css';
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFile, faFileVideo, faFolder} from "@fortawesome/free-regular-svg-icons";
+import {
+    DndContext,
+    MouseSensor,
+    useDraggable,
+    useDroppable,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core";
+
+
+function Draggable(props) {
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+        id: props.node.id,
+        data: props.node,
+    });
+
+    const style = transform ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    } : undefined;
+
+
+    return (
+        <button className="DraggableButton" ref={setNodeRef} style={style} {...listeners} {...attributes}>
+            {props.children}
+        </button>
+    );
+}
+
+
+function Droppable(props) {
+    const {setNodeRef} = useDroppable({
+        id: props.node.id,
+        data: props.node,
+    });
+
+    return (
+        <div className="DroppableContainer" ref={setNodeRef}>
+            {props.children}
+        </div>
+    );
+}
+
+
+function DnDContextWithSensors(props) {
+    const mouseSensor = useSensor(MouseSensor, {
+        // Require the mouse to move by 10 pixels before activating
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+    const sensors = useSensors(mouseSensor,);
+    return (
+        <DndContext sensors={sensors} onDragEnd={props.onDragEnd}>
+            {props.children}
+        </DndContext>
+    )
+}
 
 
 export class Node extends React.Component {
@@ -53,13 +110,32 @@ export class Contents extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.handleDragEnd = this.handleDragEnd.bind(this);
     }
 
     handleClick(e) {
         e.preventDefault()
         if (e.target === e.currentTarget) {
+            console.log("Resetting")
             this.props.onSelectedNodeChange(null);
+        } else {
+            console.log("TARGET " + e.target)
+            console.log("CURRENT " + e.currentTarget)
         }
+    }
+
+    handleDragEnd(e) {
+        if (!e.over) {
+            return
+        }
+        if (e.active.id === e.over.id) {
+            return
+        }
+        if (e.over.data.current.type !== "folder") {
+            return
+        }
+        this.props.onMoveNode(e.active.data.current, e.over.data.current);
+        this.setState({dragging: false})
     }
 
     render() {
@@ -69,16 +145,24 @@ export class Contents extends React.Component {
         const selectedNodeId = selectedNode ? selectedNode.id : null;
         if (contents){
             const listItems = contents.map((node) =>
-                <Node
-                    key={node.id}
-                    node={node}
-                    selected={selectedNodeId === node.id}
-                    onSelectedNodeChange={this.props.onSelectedNodeChange}
-                    onContentsChange={this.props.onContentsChange}
-                />
+                    <Droppable className="Droppable" node={node} key={node.id} children={
+                        <Draggable className="Draggable" node={node} key={node.id} children={
+                            <Node
+                                id={node.id}
+                                node={node}
+                                selected={selectedNodeId === node.id}
+                                onSelectedNodeChange={this.props.onSelectedNodeChange}
+                                onContentsChange={this.props.onContentsChange}
+                            />
+                        }/>
+                    }/>
             );
             return (
-                <div className="Contents" onClick={this.handleClick}>{listItems}</div>
+                <div id="contentsContainer" className="Contents" onClick={this.handleClick}>
+                    <DnDContextWithSensors onDragEnd={this.handleDragEnd}>
+                        {listItems}
+                    </DnDContextWithSensors>
+                </div>
             )
         }
         return <div className="Contents" onClick={this.handleClick}></div>
