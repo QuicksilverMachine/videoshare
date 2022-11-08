@@ -22,6 +22,22 @@ Install development requirements with:
 pip install -r requirements-dev.txt
 ```
 
+## Configuration
+
+### Server
+
+Set app environment variable before using server:
+```
+FLASK_APP=videoshare.wsgi
+```
+### Frontend
+
+Set environment variables for server before using the frontend application:
+```
+REACT_APP_VIDEOSHARE_SERVER_URL=http://localhost:5000
+```
+
+
 #### Initialize database for testing
 
 By default, database will be a SQLite file for easier local testing, though the models are compatible with PostgreSQL.
@@ -44,25 +60,11 @@ flask dev init-db
 
 ### Frontend application configuration
 
+Frontend is located in the same repository as the server, in the `frontend` folder.
+
 Install requirements (using npm) with:
 ```bash
 npm install
-```
-
-
-## Configuration
-
-### Server
-
-Set app environment variable before starting server:
-```
-FLASK_APP=videoshare.wsgi
-```
-### Frontend
-
-Set environment variables for server before starting frontend application:
-```
-REACT_APP_VIDEOSHARE_SERVER_URL=http://localhost:5000
 ```
 
 ## Running the server
