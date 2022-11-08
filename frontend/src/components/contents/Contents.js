@@ -116,11 +116,7 @@ export class Contents extends React.Component {
     handleClick(e) {
         e.preventDefault()
         if (e.target === e.currentTarget) {
-            console.log("Resetting")
             this.props.onSelectedNodeChange(null);
-        } else {
-            console.log("TARGET " + e.target)
-            console.log("CURRENT " + e.currentTarget)
         }
     }
 

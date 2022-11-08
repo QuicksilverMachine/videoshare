@@ -57,7 +57,8 @@ class App extends React.Component {
                     currentFolder: value['name'],
                     parentFolder: value["parent_id"],
                     contents: value["contents"],
-                })
+                });
+                window.history.pushState({}, null, `/${value["path"] ? value["path"] : ""}`);
             });
         } else {
             const result = ResolvePath();
@@ -69,6 +70,7 @@ class App extends React.Component {
                     parentFolder: value["parent_id"],
                     contents: value["contents"],
                 })
+                window.history.pushState({}, null, `/${value["path"] ? value["path"] : ""}`);
             });
         }
         // Reset selected after traversal

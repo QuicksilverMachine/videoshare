@@ -33,6 +33,9 @@ function patch(url, body) {
 }
 
 export function ResolvePath(path) {
+    if (path && !path.startsWith("/")) {
+        path = `/${path}`
+    }
     return get(`${ExplorePath}${path ? path: ""}`);
 }
 

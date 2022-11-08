@@ -26,6 +26,7 @@ def get(folder_id: str) -> dict[str, Any]:
                 "name": child.name,
                 "type": child.type,
                 "parent_id": child.parent_id,
+                "path": child.path,
             }
             for child in folder.children
         ],

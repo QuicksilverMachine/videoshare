@@ -34,6 +34,7 @@ def resolve_path(path: str | None = None) -> dict[str, Any]:
                 "name": node.name,
                 "type": node.type,
                 "parent_id": node.parent_id,
+                "path": node.path,
             }
             for node in contents
         ],
