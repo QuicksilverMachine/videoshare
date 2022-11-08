@@ -38,7 +38,6 @@ def create() -> dict[str, Any]:
     name = data.get("name")
     parent_id = data.get("parent_id")
 
-    # TODO: Full name validation (exclude url-unfriendly characters)
     if not name:
         raise BadRequest("Node name is not valid")
 

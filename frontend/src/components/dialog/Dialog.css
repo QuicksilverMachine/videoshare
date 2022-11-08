@@ -1,0 +1,41 @@
+.DialogOverlay {
+    background: hsla(0, 100%, 100%, 0.9);
+}
+
+.DialogContent {
+    box-shadow: 0 10px 50px hsla(0, 0%, 0%, 0.33);
+    width: 18rem !important;
+    border-radius: 1rem;
+    font-size: 20px;
+}
+
+.DialogText {
+    text-align: center;
+}
+
+.DialogNameContainer {
+    display: flex;
+    margin: 2rem 0 2rem 0;
+}
+
+.DialogName {
+    flex: 1;
+    font-size: 20px;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.DialogButtonsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.DialogButton {
+    width: 8rem;
+    border: none;
+    font-size: 20px;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+}

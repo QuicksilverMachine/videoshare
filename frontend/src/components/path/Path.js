@@ -1,7 +1,7 @@
 import './Path.css';
 import React from "react";
 import {faCopy} from "@fortawesome/free-regular-svg-icons";
-import {Button} from '../button/Button'
+import {IconButton} from '../button/IconButton'
 
 export class Path extends React.Component {
     constructor(props) {
@@ -22,9 +22,9 @@ export class Path extends React.Component {
                 <h1>
                     {currentFolder ? currentFolder: "Root"}
                     &nbsp;
-                    <Button onClick={this.handleCopyURLClick} icon={faCopy} help={'Copy current path'}/>
+                    <IconButton onClick={this.handleCopyURLClick} icon={faCopy} title={'Copy current path'}/>
                 </h1>
-                <div className="PathFull">{path}</div>
+                <div className="PathFull">{path ? `/${path}` : "/"}</div>
             </div>
         )
     }

@@ -1,9 +1,9 @@
-import './Button.css'
+import './IconButton.css'
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
-export class Button extends React.Component {
+export class IconButton extends React.Component {
 
     constructor(props) {
         super(props);
@@ -18,9 +18,9 @@ export class Button extends React.Component {
 
     render() {
         const icon = this.props.icon;
-        const help = this.props.help;
+        const title = this.props.title;
         const disabled = this.props.disabled;
-        return <button className="Button" title={help} disabled={disabled} onClick={this.handleClick}>
+        return <button className="IconButton" title={title} disabled={disabled} onClick={this.handleClick}>
             <FontAwesomeIcon icon={icon} />
         </button>
     }
