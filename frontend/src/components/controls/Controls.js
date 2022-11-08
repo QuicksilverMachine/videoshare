@@ -1,10 +1,12 @@
-import './Controls.css';
+import "./Controls.css";
 import React from "react";
-import {faCircleLeft, faCircleUp} from "@fortawesome/free-regular-svg-icons";
-import {faFileCirclePlus, faFolderPlus} from "@fortawesome/free-solid-svg-icons";
-import {IconButton} from '../button/IconButton'
-import {NameDialog} from '../dialog/Dialog'
-
+import { faCircleLeft, faCircleUp } from "@fortawesome/free-regular-svg-icons";
+import {
+    faFileCirclePlus,
+    faFolderPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { IconButton } from "../button/IconButton";
+import { NameDialog } from "../dialog/Dialog";
 
 export class Controls extends React.Component {
     constructor(props) {
@@ -16,24 +18,26 @@ export class Controls extends React.Component {
         this.handleClickCreateVideo = this.handleClickCreateVideo.bind(this);
         this.handleCreateVideo = this.handleCreateVideo.bind(this);
         this.handleClickMoveNodeUp = this.handleClickMoveNodeUp.bind(this);
-        this.handleCloseNewVideoDialog = this.handleCloseNewVideoDialog.bind(this);
-        this.handleCloseNewFolderDialog = this.handleCloseNewFolderDialog.bind(this);
+        this.handleCloseNewVideoDialog =
+            this.handleCloseNewVideoDialog.bind(this);
+        this.handleCloseNewFolderDialog =
+            this.handleCloseNewFolderDialog.bind(this);
         this.state = {
             showNewVideoDialog: false,
             showNewFolderDialog: false,
-        }
+        };
     }
 
     onSelectedNodeChange(e) {
-        this.props.onSelectedNodeChange(e.target.value)
+        this.props.onSelectedNodeChange(e.target.value);
     }
 
     handleClickNavigateBack() {
-        this.props.onContentsChange(null)
+        this.props.onContentsChange(null);
     }
 
     handleClickCreateFolder() {
-        this.setState({showNewFolderDialog: true})
+        this.setState({ showNewFolderDialog: true });
     }
 
     handleCreateFolder(name) {
@@ -42,12 +46,12 @@ export class Controls extends React.Component {
     }
 
     handleClickCreateVideo() {
-        this.setState({showNewVideoDialog: true})
+        this.setState({ showNewVideoDialog: true });
     }
 
     handleCreateVideo(name) {
         this.props.onCreateVideo(name);
-        this.handleCloseNewVideoDialog()
+        this.handleCloseNewVideoDialog();
     }
 
     handleClickMoveNodeUp() {
@@ -55,11 +59,11 @@ export class Controls extends React.Component {
     }
 
     handleCloseNewFolderDialog() {
-        this.setState({showNewFolderDialog: false})
+        this.setState({ showNewFolderDialog: false });
     }
 
     handleCloseNewVideoDialog() {
-        this.setState({showNewVideoDialog: false})
+        this.setState({ showNewVideoDialog: false });
     }
 
     render() {
@@ -68,13 +72,41 @@ export class Controls extends React.Component {
 
         return (
             <div className="Controls">
-                <IconButton onClick={this.handleClickNavigateBack} icon={faCircleLeft} title={'Back one level'} disabled={currentFolder === null}/>
-                <IconButton onClick={this.handleClickCreateVideo} icon={faFileCirclePlus} title={'Create new video'} />
-                <IconButton onClick={this.handleClickCreateFolder} icon={faFolderPlus} title={'Create new folder'} />
-                <IconButton onClick={this.handleClickMoveNodeUp} icon={faCircleUp} title={'Move selected node one level up'} disabled={selectedNode === null || currentFolder === null}/>
-                <NameDialog nodeType="video" showDialog={this.state.showNewVideoDialog} onConfirmClick={this.handleCreateVideo} onCancelClick={this.handleCloseNewVideoDialog}/>
-                <NameDialog nodeType="folder" showDialog={this.state.showNewFolderDialog} onConfirmClick={this.handleCreateFolder} onCancelClick={this.handleCloseNewFolderDialog}/>
+                <IconButton
+                    onClick={this.handleClickNavigateBack}
+                    icon={faCircleLeft}
+                    title={"Back one level"}
+                    disabled={currentFolder === null}
+                />
+                <IconButton
+                    onClick={this.handleClickCreateVideo}
+                    icon={faFileCirclePlus}
+                    title={"Create new video"}
+                />
+                <IconButton
+                    onClick={this.handleClickCreateFolder}
+                    icon={faFolderPlus}
+                    title={"Create new folder"}
+                />
+                <IconButton
+                    onClick={this.handleClickMoveNodeUp}
+                    icon={faCircleUp}
+                    title={"Move selected node one level up"}
+                    disabled={selectedNode === null || currentFolder === null}
+                />
+                <NameDialog
+                    nodeType="video"
+                    showDialog={this.state.showNewVideoDialog}
+                    onConfirmClick={this.handleCreateVideo}
+                    onCancelClick={this.handleCloseNewVideoDialog}
+                />
+                <NameDialog
+                    nodeType="folder"
+                    showDialog={this.state.showNewFolderDialog}
+                    onConfirmClick={this.handleCreateFolder}
+                    onCancelClick={this.handleCloseNewFolderDialog}
+                />
             </div>
-        )
+        );
     }
 }

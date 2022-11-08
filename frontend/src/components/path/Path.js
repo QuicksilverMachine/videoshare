@@ -1,7 +1,7 @@
-import './Path.css';
+import "./Path.css";
 import React from "react";
-import {faCopy} from "@fortawesome/free-regular-svg-icons";
-import {IconButton} from '../button/IconButton'
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
+import { IconButton } from "../button/IconButton";
 
 export class Path extends React.Component {
     constructor(props) {
@@ -10,7 +10,7 @@ export class Path extends React.Component {
     }
 
     handleCopyURLClick() {
-        this.props.onCopyURLToClipboard()
+        this.props.onCopyURLToClipboard();
     }
 
     render() {
@@ -20,12 +20,16 @@ export class Path extends React.Component {
         return (
             <div className="Path">
                 <h1>
-                    {currentFolder ? currentFolder: "Root"}
+                    {currentFolder ? currentFolder : "Root"}
                     &nbsp;
-                    <IconButton onClick={this.handleCopyURLClick} icon={faCopy} title={'Copy current path'}/>
+                    <IconButton
+                        onClick={this.handleCopyURLClick}
+                        icon={faCopy}
+                        title={"Copy current path"}
+                    />
                 </h1>
                 <div className="PathFull">{path ? `/${path}` : "/"}</div>
             </div>
-        )
+        );
     }
 }

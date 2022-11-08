@@ -1,38 +1,47 @@
-import './Contents.css';
+import "./Contents.css";
 import React from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faFile, faFileVideo, faFolder} from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faFile,
+    faFileVideo,
+    faFolder,
+} from "@fortawesome/free-regular-svg-icons";
 import {
     DndContext,
     MouseSensor,
     useDraggable,
     useDroppable,
     useSensor,
-    useSensors
+    useSensors,
 } from "@dnd-kit/core";
 
-
 function Draggable(props) {
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.node.id,
         data: props.node,
     });
 
-    const style = transform ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    } : undefined;
-
+    const style = transform
+        ? {
+              transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+          }
+        : undefined;
 
     return (
-        <button className="DraggableButton" ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <button
+            className="DraggableButton"
+            ref={setNodeRef}
+            style={style}
+            {...listeners}
+            {...attributes}
+        >
             {props.children}
         </button>
     );
 }
 
-
 function Droppable(props) {
-    const {setNodeRef} = useDroppable({
+    const { setNodeRef } = useDroppable({
         id: props.node.id,
         data: props.node,
     });
@@ -44,7 +53,6 @@ function Droppable(props) {
     );
 }
 
-
 function DnDContextWithSensors(props) {
     const mouseSensor = useSensor(MouseSensor, {
         // Require the mouse to move by 10 pixels before activating
@@ -52,14 +60,13 @@ function DnDContextWithSensors(props) {
             distance: 10,
         },
     });
-    const sensors = useSensors(mouseSensor,);
+    const sensors = useSensors(mouseSensor);
     return (
         <DndContext sensors={sensors} onDragEnd={props.onDragEnd}>
             {props.children}
         </DndContext>
-    )
+    );
 }
-
 
 export class Node extends React.Component {
     constructor(props) {
@@ -93,18 +100,19 @@ export class Node extends React.Component {
         }
         return (
             <div
-                className={`Node ${selected ? "NodeSelected": ""}`}
+                className={`Node ${selected ? "NodeSelected" : ""}`}
                 key={nodeId}
                 onClick={this.handleClick}
                 onDoubleClick={this.handleDoubleClick}
             >
-                <div className="NodeIcon"><FontAwesomeIcon icon={icon}/></div>
+                <div className="NodeIcon">
+                    <FontAwesomeIcon icon={icon} />
+                </div>
                 <div className="NodeName">{nodeName}</div>
             </div>
-        )
+        );
     }
 }
-
 
 export class Contents extends React.Component {
     constructor(props) {
@@ -114,7 +122,7 @@ export class Contents extends React.Component {
     }
 
     handleClick(e) {
-        e.preventDefault()
+        e.preventDefault();
         if (e.target === e.currentTarget) {
             this.props.onSelectedNodeChange(null);
         }
@@ -122,16 +130,16 @@ export class Contents extends React.Component {
 
     handleDragEnd(e) {
         if (!e.over) {
-            return
+            return;
         }
         if (e.active.id === e.over.id) {
-            return
+            return;
         }
         if (e.over.data.current.type !== "folder") {
-            return
+            return;
         }
         this.props.onMoveNode(e.active.data.current, e.over.data.current);
-        this.setState({dragging: false})
+        this.setState({ dragging: false });
     }
 
     render() {
@@ -139,28 +147,46 @@ export class Contents extends React.Component {
         const contents = this.props.contents;
 
         const selectedNodeId = selectedNode ? selectedNode.id : null;
-        if (contents){
-            const listItems = contents.map((node) =>
-                    <Droppable className="Droppable" node={node} key={node.id} children={
-                        <Draggable className="Draggable" node={node} key={node.id} children={
-                            <Node
-                                id={node.id}
-                                node={node}
-                                selected={selectedNodeId === node.id}
-                                onSelectedNodeChange={this.props.onSelectedNodeChange}
-                                onContentsChange={this.props.onContentsChange}
-                            />
-                        }/>
-                    }/>
-            );
+        if (contents) {
+            const listItems = contents.map((node) => (
+                <Droppable
+                    className="Droppable"
+                    node={node}
+                    key={node.id}
+                    children={
+                        <Draggable
+                            className="Draggable"
+                            node={node}
+                            key={node.id}
+                            children={
+                                <Node
+                                    id={node.id}
+                                    node={node}
+                                    selected={selectedNodeId === node.id}
+                                    onSelectedNodeChange={
+                                        this.props.onSelectedNodeChange
+                                    }
+                                    onContentsChange={
+                                        this.props.onContentsChange
+                                    }
+                                />
+                            }
+                        />
+                    }
+                />
+            ));
             return (
-                <div id="contentsContainer" className="Contents" onClick={this.handleClick}>
+                <div
+                    id="contentsContainer"
+                    className="Contents"
+                    onClick={this.handleClick}
+                >
                     <DnDContextWithSensors onDragEnd={this.handleDragEnd}>
                         {listItems}
                     </DnDContextWithSensors>
                 </div>
-            )
+            );
         }
-        return <div className="Contents" onClick={this.handleClick}></div>
+        return <div className="Contents" onClick={this.handleClick}></div>;
     }
 }

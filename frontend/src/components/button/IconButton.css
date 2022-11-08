@@ -6,15 +6,18 @@
     margin-right: 10px;
 }
 
-.IconButton:hover, .IconButton[enabled] {
+.IconButton:hover,
+.IconButton[enabled] {
     color: #555;
     cursor: pointer;
 }
 
-.IconButton:active, .IconButton[enabled] {
+.IconButton:active,
+.IconButton[enabled] {
     color: #777;
 }
 
-.IconButton:disabled, .IconButton[disabled]{
+.IconButton:disabled,
+.IconButton[disabled] {
     color: #ccc;
 }
