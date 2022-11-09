@@ -1,12 +1,14 @@
 # Videoshare
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![React 17](https://img.shields.io/badge/react-17-blue.svg)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://gitlab.com/dejan.knezevic/address-book/-/blob/main/LICENSE)
 
 
 ## Requirements
 
 - Python 3.10
+- React 17
 
 ## Installation
 
