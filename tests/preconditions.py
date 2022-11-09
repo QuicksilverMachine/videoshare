@@ -7,6 +7,7 @@ fake = Faker()
 
 class Preconditions:
     def __init__(self):
+        self.node = NodePrecondition
         self.video = VideoPrecondition
         self.folder = FolderPrecondition
 

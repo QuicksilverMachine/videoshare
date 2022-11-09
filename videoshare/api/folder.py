@@ -56,7 +56,7 @@ def create() -> dict[str, Any]:
         logger.warning("Failed to create node, name is not valid")
         raise BadRequest("Node node is not valid")
 
-    existing = Folder.query.filter_by(name=name, parent_id=parent_id).first()
+    existing = Node.query.filter_by(name=name, parent_id=parent_id).first()
     if existing:
         logger.warning("Failed to create node, name already exists")
         raise BadRequest("Node with that name already exists in folder")

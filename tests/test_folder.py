@@ -1,6 +1,8 @@
 import faker
 import pytest
 
+from videoshare.models import NodeType
+
 fake = faker.Faker()
 
 
@@ -76,12 +78,21 @@ def test_move_folder(given, client, verify):
     verify.folder.exists(folder_id=folder.id, parent_id=parent.id)
 
 
-def test_move_folder_existing_name(given, client, verify):
+@pytest.mark.parametrize(
+    "node_type",
+    [
+        # Video exists with same name
+        NodeType.VIDEO,
+        # Folder exists with same name
+        NodeType.FOLDER,
+    ],
+)
+def test_move_folder_existing_name(given, client, verify, node_type):
     # preconditions
     name = fake.name()
     folder = given.folder.exists(name=name, parent_id=None)
     new_parent = given.folder.exists()
-    given.folder.exists(name=name, parent_id=new_parent.id)
+    given.node.exists(name=name, type_=node_type, parent_id=new_parent.id)
 
     # action
     response = client.patch(f"folder/{folder.id}", json={"parent_id": new_parent.id})
