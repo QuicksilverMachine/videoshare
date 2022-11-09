@@ -22,29 +22,18 @@ Install development requirements with:
 pip install -r requirements-dev.txt
 ```
 
-## Configuration
-
-### Server
-
-Set app environment variable before using server:
-```
-FLASK_APP=videoshare.wsgi
-```
-### Frontend
-
-Set environment variables for server before using the frontend application:
-```
-REACT_APP_VIDEOSHARE_SERVER_URL=http://localhost:5000
+Set app environment variable before using server or cli:
+```bash
+export FLASK_APP=videoshare.wsgi
 ```
 
-
-#### Initialize database for testing
+### Initialize database for testing
 
 By default, database will be a SQLite file for easier local testing, though the models are compatible with PostgreSQL.
 To change the database to PostgreSQL, create a database `videoshare` with a role `videoshare` with the password `videoshare`,
 and set the environment variable:
-```
-SQLALCHEMY_DATABASE_URI=postgresql://videoshare:videoshare@localhost:5432/videoshare
+```bash
+export SQLALCHEMY_DATABASE_URI=postgresql://videoshare:videoshare@localhost:5432/videoshare
 ```
 For this basic use case SQLite was enough since actual deployment is not planned, and it is simpler to test locally,
 even with a single session restriction. Otherwise, PostgreSql would be used with the `psycopg2-binary` package for the
@@ -70,6 +59,11 @@ Install requirements (using npm) with:
 npm install
 ```
 
+Set environment variables for server before using the frontend application:
+```bash
+export REACT_APP_VIDEOSHARE_SERVER_URL=http://localhost:5000
+```
+
 ## Running the server
 
 Server can be started for local development using:
@@ -80,11 +74,28 @@ This will start a local server on http://localhost:5000.
 
 ## Running the frontend
 
+Enter the frontend directory and run:
 ```bash
 npm start
 ```
 
 Frontend will start the server at http://localhost:3000.
+
+
+## Usage
+
+The UI contains three main sections: path, control strip and contents.
+
+Next to the path is a button that enables copying the current folder path.
+
+Various controls exist on the control strip:
+- Navigation to the parent folder if it exists
+- Creation of new videos and folders
+- Moving the selected node one folder up
+
+Finally, the contents section is populated by videos and folders that can be moved around by 
+dragging and dropping them into other folders, while keeping in mind that node names are unique 
+per folder. Clicking on the node will select it, enabling the "move up" function on the control strip.
 
 
 ## OpenAPI Schema
