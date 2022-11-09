@@ -13,3 +13,4 @@ class TestConfig(Config):
     TESTING = True
     FLASK_DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = "sqlite:///../videoshare-test.sqlite3"

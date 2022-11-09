@@ -46,6 +46,9 @@ and set the environment variable:
 ```
 SQLALCHEMY_DATABASE_URI=postgresql://videoshare:videoshare@localhost:5432/videoshare
 ```
+For this basic use case SQLite was enough since actual deployment is not planned, and it is simpler to test locally,
+even with a single session restriction. Otherwise, PostgreSql would be used with the `psycopg2-binary` package for the
+database driver.
 
 To generate database run migrations with:
 ```bash
@@ -100,12 +103,17 @@ It will automatically run all backend checks before each commit, but can also be
 pre-commit run -a
 ```
 
-## Additional notes
+## Tests
 
-### Database
-For this basic use case SQLite was enough since actual deployment is not planned, and it is simpler to test locally,
-even with a single session restriction. Otherwise, PostgreSql would be used with the `psycopg2-binary` package for the
-database driver.
+Running tests on the server is done with:
+```bash
+pytest
+```
+Not everything is currently covered with backend tests, but most of the 
+unique situations should be. There can be a lot more tests for special cases for each endpoint.
 
-### Logging and events
-Events could be generated and sent to something like Kafka for later processing.
+Running tests on the frontend is done with:
+```bash
+npm test
+```
+There is very little testing done on frontend side, as I'm not experienced on that front.

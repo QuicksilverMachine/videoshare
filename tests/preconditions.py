@@ -1,6 +1,6 @@
 from faker import Faker
 
-from videoshare.models import Node, NodeType, db
+from videoshare.models import Folder, Node, NodeType, Video, db
 
 fake = Faker()
 
@@ -28,14 +28,26 @@ class NodePrecondition:
 class VideoPrecondition:
     @staticmethod
     def exists(id_=None, name=None, parent_id=None):
-        return NodePrecondition.exists(
-            id_=id_, name=name, type_=NodeType.VIDEO, parent_id=parent_id
+        video = Video(
+            id=id_ or fake.uuid4(),
+            name=name or fake.slug(),
+            type=NodeType.VIDEO,
+            parent_id=parent_id,
         )
+        db.session.add(video)
+        db.session.commit()
+        return video
 
 
 class FolderPrecondition:
     @staticmethod
     def exists(id_=None, name=None, parent_id=None):
-        return NodePrecondition.exists(
-            id_=id_, name=name, type_=NodeType.FOLDER, parent_id=parent_id
+        folder = Folder(
+            id=id_ or fake.uuid4(),
+            name=name or fake.slug(),
+            type=NodeType.FOLDER,
+            parent_id=parent_id,
         )
+        db.session.add(folder)
+        db.session.commit()
+        return folder

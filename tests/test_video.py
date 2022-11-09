@@ -8,7 +8,7 @@ def test_create_video(given, client, verify):
 
 
 def test_move_video(given, client, verify):
-    # precondition
+    # preconditions
     video = given.video.exists()
     parent = given.folder.exists()
 

@@ -72,12 +72,14 @@ class Node(db.Model):  # type: ignore
             name,
             parent_id,
             unique=True,
+            sqlite_where=parent_id.is_(None),
             postgresql_where=parent_id.isnot(None),
         ),
         Index(
             "uix_unique_name_type_parent_id_null",
             name,
             unique=True,
+            sqlite_where=parent_id.is_(None),
             postgresql_where=parent_id.is_(None),
         ),
     )
