@@ -129,4 +129,3 @@ Running tests on the frontend is done with:
 ```bash
 npm test
 ```
-There is very little testing done on frontend side, as I'm not experienced on that front.
